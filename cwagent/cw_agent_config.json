@@ -1,0 +1,49 @@
+{
+	"agent": {
+			"run_as_user": "root"
+	},
+	"logs": {
+			"logs_collected": {
+					"files": {
+							"collect_list": [
+									{
+											"file_path": "/opt/kasm/current/log/agent_json.log",
+											"log_group_name": "kasm_logs",
+											"log_stream_name": "{instance_id}",
+											"retention_in_days": 30
+									},
+									{
+											"file_path": "/opt/kasm/current/log/api_server_json.log",
+											"log_group_name": "kasm_logs",
+											"log_stream_name": "{instance_id}",
+											"retention_in_days": 30
+									},
+									{
+											"file_path": "/opt/kasm/current/log/manager_api_server_json.log",
+											"log_group_name": "kasm_logs",
+											"log_stream_name": "{instance_id}",
+											"retention_in_days": 30
+									},
+									{
+											"file_path": "/opt/kasm/current/log/web_filter_access_json.log",
+											"log_group_name": "kasm_logs",
+											"log_stream_name": "{instance_id}",
+											"retention_in_days": 30
+									},
+									{
+											"file_path": "/opt/kasm/current/log/share_json.log",
+											"log_group_name": "kasm_logs",
+											"log_stream_name": "{instance_id}",
+											"retention_in_days": 30
+									},
+									{
+											"file_path": "/opt/kasm/current/log/nginx/access_json.log",
+											"log_group_name": "kasm_logs",
+											"log_stream_name": "{instance_id}",
+											"retention_in_days": 30
+									}
+							]
+					}
+			}
+	}
+}
