@@ -6,10 +6,6 @@ ENV STARTUPDIR /dockerstartup
 ENV INST_SCRIPTS $STARTUPDIR/install
 WORKDIR $HOME
 
-# Install Google Chrome
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt-get install ./google-chrome-stable_current_amd64.deb -y
-
 # Install VSCODE
 WORKDIR $HOME
 #Installing VS code
@@ -28,6 +24,10 @@ RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-c
     && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 ######### End Customizations ###########
+
+# Install Google Chrome
+RUN cp -r ./workspaces-images/src/ubuntu/install/chrome $INST_SCRIPTS/chrome/
+RUN bash $INST_SCRIPTS/chrome/install_chrome.sh  && rm -rf $INST_SCRIPTS/chrome/
 
 RUN chown 1000:0 $HOME
 RUN $STARTUPDIR/set_user_permission.sh $HOME
