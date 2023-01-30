@@ -12,6 +12,7 @@ resource "aws_efs_file_system" "efs" {
 resource "aws_efs_mount_target" "efs-mt" {
   count           = length(data.aws_availability_zones.available.names)
   file_system_id  = aws_efs_file_system.efs.id
-  subnet_id       = var.aws_subnet[count.index]
+  #  subnet_id       = var.aws_subnet[count.index]
+  subnet_id       = flatten(data.aws_subnet_ids.public.ids)[count.index]
   security_groups = [aws_security_group.efs.id]
 }
