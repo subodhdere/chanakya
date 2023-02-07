@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "kasm" {
-  name = "kasm" 
+  name = "kasm"
 }
 
 resource "aws_sns_topic_subscription" "kasm" {
