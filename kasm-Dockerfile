@@ -17,6 +17,7 @@ RUN bash $INST_SCRIPTS/install_vs_code.sh
 
 #Installing Docker
 RUN apt update && apt upgrade -y && apt install sudo -y && apt install docker.io -y
+RUN apt remove libzmq5 -y
 
 #Installing docker-compose
 RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
