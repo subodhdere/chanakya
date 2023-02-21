@@ -1,3 +1,4 @@
+root@ip-172-31-35-16:~/a# cat Dockerfile
 FROM kasmweb/core-ubuntu-bionic:1.10.0
 USER root
 
@@ -14,10 +15,8 @@ RUN git clone https://github.com/kasmtech/workspaces-images.git
 RUN cp -r workspaces-images/src/ubuntu/install/vs_code $INST_SCRIPTS/
 RUN bash $INST_SCRIPTS/install_vs_code.sh
 
-
 #Installing Docker
-RUN apt update && apt upgrade -y && apt install sudo -y && apt install docker.io -y
-RUN apt remove libzmq5 -y
+#RUN apt update && apt upgrade -y && apt install sudo -y && apt install docker.io -y && apt install --only-upgrade libzmq5 -y
 
 #Installing docker-compose
 RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
@@ -33,8 +32,40 @@ RUN bash $INST_SCRIPTS/chrome/install_chrome.sh  && rm -rf $INST_SCRIPTS/chrome/
 RUN chown 1000:0 $HOME
 RUN $STARTUPDIR/set_user_permission.sh $HOME
 
+#Installing Docker
+RUN apt update && apt upgrade -y && apt install sudo -y && apt install docker.io -y && apt install --only-upgrade libzmq5 -y
+RUN apt remove libzmq5 -y
+
+RUN apt install python3.7 -y \
+    && apt-get -y install python3-pip \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+
+RUN pip3 install autopep8==1.6.0 \
+    && pip3 install bandit==1.7.4 \
+    && pip3 install black==22.6.0 \
+    && pip3 install cryptography \
+    && pip3 install flake8==4.0.1 \
+    && pip3 install pathspec==0.9.0 \
+    && pip3 install pre-commit==2.20.0 \
+    && pip3 install pycodestyle==2.8.0 \
+    && pip3 install pydocstyle==6.1.1 \
+    && pip3 install pylint==2.14.4 \
+    && pip3 install yapf==0.32.0 \
+    && pip3 install mypy==0.961 --default-timeout=100 \
+    && apt install python3-setuptools \
+    && pip3 install -U pip setuptools \
+    && pip3 install dbt-snowflake==1.3.0 \
+    && pip3 install elementary-data==0.6.2 \
+    && pip3 install elementary-data[snowflake]==0.6.2 \
+    && pip3 install pyopenssl==22.0.0 \
+    && pip3 install sqlfluff==1.3.2 \
+    && pip3 install sqlfluff-templater-dbt==1.3.2
+
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 RUN mkdir -p $HOME && chown -R 1000:0 $HOME
+
+RUN useradd -rm -d /home/kasm -s /bin/bash -g root -G sudo -u 2001 kasm \
+    && echo 'kasm:Kasm@123' | chpasswd
 
 USER 1000
