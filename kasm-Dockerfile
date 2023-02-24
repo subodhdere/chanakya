@@ -65,7 +65,7 @@ ENV HOME /home/kasm-user
 WORKDIR $HOME
 RUN mkdir -p $HOME && chown -R 1000:0 $HOME
 
-RUN echo 'default   ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
-    && echo 'default:x:1000:1000::/home/kasm-user:/bin/bash' >> /etc/passwd
+RUN echo 'kasm   ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
+    && echo 'kasm:x:1000:1000::/home/kasm-user:/bin/bash' >> /etc/passwd
 
 USER 1000
