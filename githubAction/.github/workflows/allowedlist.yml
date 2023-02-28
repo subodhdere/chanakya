@@ -1,6 +1,0 @@
-general:
-  vulnerabilities:
-    - CVE-2003-1307
-    - CVE-2011-3374
-  bestPracticeViolations:
-    - CIS-DI-0005
