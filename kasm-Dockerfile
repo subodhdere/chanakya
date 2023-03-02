@@ -24,6 +24,11 @@ RUN $STARTUPDIR/set_user_permission.sh $HOME
 RUN apt update && apt upgrade -y && apt install sudo unzip firefox -y && apt install --only-upgrade libzmq5 -y
 RUN apt remove libzmq5 -y
 
+#Install intellij
+RUN apt install apt-transport-https software-properties-common -y \
+    && add-apt-repository ppa:mmk2410/intellij-idea -y \
+    && apt install intellij-idea-community -y
+
 # Install python3
 RUN apt install python3.8 -y \
     && apt-get -y install python3-pip \
@@ -51,8 +56,9 @@ RUN pip3 install autopep8==1.6.0 \
     && pip3 install sqlfluff==1.3.2 \
     && pip3 install sqlfluff-templater-dbt==1.3.2 \
     && pip3 install snowflake-connector-python==2.8.2 \
-    && pip3 install cryptography==39.0.1 \ 
-    && pip3 install werkzeug==2.2.3
+    && pip3 install werkzeug==2.2.3 \
+    && pip3 uninstall cryptography==38.0.4 -y \
+    && pip3 install cryptography==39.0.1
 
 # Add persistent bin directory & setup cli
 RUN mkdir $HOME/.dbt $HOME/.ssh $HOME/.aws $HOME/.snowsql $HOME/bin
@@ -76,11 +82,31 @@ RUN chmod a+w /home/snowsql_rt.log_bootstrap
 RUN apt-get autoclean
 RUN apt-get autoremove -y
 
+#Install awscli, AzureCLI, nano and zsh
+RUN apt install unzip \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && curl -sL https://aka.ms/InstallAzureCLIDeb | bash \
+    && apt install nano \
+    && apt install zsh -y \
+    && apt install tree \
+    && apt install jq -y
+
+#Install DBeaver
+RUN apt install rpm -y \
+    && wget https://dbeaver.io/files/dbeaver-ce-latest-stable.x86_64.rpm \
+    && rpm -ivh dbeaver-ce-latest-stable.x86_64.rpm
+
+RUN pip3 uninstall cryptography -y \
+    && pip3 install cryptography==39.0.1
+
 # Finalize user setup
 RUN groupadd 1000
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 RUN mkdir -p $HOME && chown -R 1000:0 $HOME
+RUN chown -R 1000:0 /home/kasm-default-profile
 
 RUN echo 'kasm   ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers \
     && echo 'kasm:x:1000:1000::/home/kasm-user:/bin/bash' >> /etc/passwd
