@@ -56,9 +56,8 @@ RUN pip3 install autopep8==1.6.0 \
     && pip3 install sqlfluff==1.3.2 \
     && pip3 install sqlfluff-templater-dbt==1.3.2 \
     && pip3 install snowflake-connector-python==2.8.2 \
-    && pip3 install werkzeug==2.2.3 \
-    && pip3 uninstall cryptography==38.0.4 -y \
-    && pip3 install cryptography==39.0.1
+    && pip3 install cryptography==39.0.1 \
+    && pip3 install werkzeug==2.2.3
 
 # Add persistent bin directory & setup cli
 RUN mkdir $HOME/.dbt $HOME/.ssh $HOME/.aws $HOME/.snowsql $HOME/bin
@@ -66,21 +65,18 @@ RUN cp /etc/skel/.bashrc $HOME
 RUN echo 'export PATH="$HOME/bin:$PATH"' >> $HOME/.bashrc
 
 # Install tfswitch
-RUN wget https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh
-RUN chmod 755 install.sh
-RUN ./install.sh -b /usr/bin
-RUN rm install.sh
+RUN wget https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh \
+    && chmod 755 install.sh \
+    && ./install.sh -b /usr/bin \
+    && rm -rf install.sh
 
 # Install SnowSQL
-RUN apt-get install alien -y
-RUN wget https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowflake-snowsql-1.2.17-1.x86_64.rpm -O snowsql.rpm
-RUN alien -i snowsql.rpm
-RUN touch /home/snowsql_rt.log_bootstrap
-RUN chmod a+w /home/snowsql_rt.log_bootstrap
-
-# Cleanup
-RUN apt-get autoclean
-RUN apt-get autoremove -y
+RUN apt-get install alien -y \
+    && wget https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowflake-snowsql-1.2.17-1.x86_64.rpm -O snowsql.rpm \
+    && alien -i snowsql.rpm \
+    && touch /home/snowsql_rt.log_bootstrap \
+    && chmod a+w /home/snowsql_rt.log_bootstrap \
+    && rm -rf snowsql.rpm
 
 #Install awscli, AzureCLI, nano and zsh
 RUN apt install unzip \
@@ -91,15 +87,19 @@ RUN apt install unzip \
     && apt install nano \
     && apt install zsh -y \
     && apt install tree \
-    && apt install jq -y
+    && apt install jq -y \
+    && rm -rf awscliv2.zip
 
 #Install DBeaver
 RUN apt install rpm -y \
     && wget https://dbeaver.io/files/dbeaver-ce-latest-stable.x86_64.rpm \
-    && rpm -ivh dbeaver-ce-latest-stable.x86_64.rpm
+    && rpm -ivh dbeaver-ce-latest-stable.x86_64.rpm \
+    && rm -rf dbeaver-ce-latest-stable.x86_64.rpm
 
-RUN pip3 uninstall cryptography -y \
-    && pip3 install cryptography==39.0.1
+# Cleanup
+RUN apt-get autoclean
+RUN apt-get autoremove -y
+
 
 # Finalize user setup
 RUN groupadd 1000
